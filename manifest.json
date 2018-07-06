@@ -1,0 +1,18 @@
+{
+
+  "description": "Add the ability to add custom emojis to github.",
+  "manifest_version": 2,
+  "name": "Custom Emoji Addiction",
+  "version": "1.0",
+  "homepage_url": "https://github.com/kyleroush/Custom-Emoji-addiction",
+
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": [
+        "jquery.js",
+        "Script.js"
+      ]
+    }
+  ]
+}
