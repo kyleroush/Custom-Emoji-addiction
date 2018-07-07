@@ -6,11 +6,22 @@
   "version": "1.0",
   "homepage_url": "https://github.com/kyleroush/Custom-Emoji-addiction",
 
+
+  "permissions": [
+    "storage"
+  ],
+
+  "browser_action": {
+    "default_title": "Custom Emoji Addiction Settings",
+    "default_popup": "popup/Settings.html"
+  },
+
   "content_scripts": [
     {
       "matches": ["*://*/*"],
       "js": [
         "jquery.js",
+        "chromeStorage.js",
         "Script.js"
       ]
     }

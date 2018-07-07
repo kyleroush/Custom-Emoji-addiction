@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="Settings.css"/>
+  </head>
+
+<body>
+
+  <div class="outer-wrapper">
+    <h1>Settings for Custom Emoji Addiction</h1>
+    <p>
+      Json syntax must be <br />
+      <code>
+        {
+          "{name}": "{imageUrl}"
+        }
+      </code> <br />
+      like <br />
+      <code>
+        {
+          "danger_zone": "https://emoji.slack-edge.com/T039B0HP2/danger_zone/5be61f0c1aad398c.png"
+        }
+      </code> <br />
+      You can reference this emoji by using the name in colons like :danger_zone: <br />
+      The plugin will then go and replace it with picture you have added but as an emoji. <br />
+
+      You can also have alias or additional names for the same emojis they have a syntax like <br />
+      <code>
+        {
+          "{name1}": "{imageUrl}",
+          "{name2}": "alias:{name1}"
+
+        }
+      </code> <br />
+
+      This way when you type either :name1: or name2 it will use the same emojis. and example would be <br />
+      <code>
+        {
+          "danger_zone": "https://emoji.slack-edge.com/T039B0HP2/danger_zone/5be61f0c1aad398c.png",
+          "archer": "alias:danger_zone"
+        }
+      </code> <br />
+    </p>
+
+    <div class="json-url">
+      <h2>Link to an emoji json</h2>
+      <input type="text" id="raw-json-url">
+      <button id="load">Load Json</button>
+    </div>
+
+    <div class="raw-json">
+      <h2>Raw emoji json</h2>
+      <textarea id="emoji-json"></textarea>
+      <button class="clear">Clear</button>
+      <button class="add">Save Json</button>
+      <div class="clearfix"></div>
+    </div>
+
+  </div>
+  <script src="../jquery.js"></script>
+  <script src="Settings.js"></script>
+</body>
+
+</html>
