@@ -21,8 +21,13 @@
       "matches": ["*://*/*"],
       "js": [
         "jquery.js",
+        "caret.js",
+        "atwho.js",
         "chromeStorage.js",
         "Script.js"
+      ],
+      "css" : [
+        "atwho.css"
       ]
     }
   ]

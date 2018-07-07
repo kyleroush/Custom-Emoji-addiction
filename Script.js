@@ -1,4 +1,16 @@
 function oninput() {
+
+
+
+  var emoji_config = {
+    at: ":",
+    data: autocompleteemojis,
+    displayTpl: "<li>${img} ${name} </li>",
+    insertTpl: '${img}',
+    delay: 400
+  }
+  $(this).atwho(emoji_config);
+
 	var regex = /:([^:]+):/;
   var text = this.value
   this.value.split(' ').forEach(function (word) {
@@ -21,9 +33,9 @@ function getImage(id) {
     if(!image.startsWith(alias)) {
       var img = document.createElement("img");
       img.src = image;
-      img.alt = ':' + id + ':';
+      img.alt = id;
       img.width = 20;
-      toolTip(img, ':' + id + ':')
+      // toolTip(img, ':' + id + ':')
       return img.outerHTML;
     }
     id = image.replace(alias, "")
@@ -43,6 +55,8 @@ function toolTip(element, tip) {
 
 
 var map = {};
+
+var autocompleteemojis = []
 getEmojis();
 
 if (map == null) {
@@ -50,4 +64,16 @@ if (map == null) {
 }
 if(document.location.host.includes("github")) {
   $('body').on('input', 'textarea', oninput);
+	$('body').on('shown.atwho', function() {
+		var emojiSug = document.querySelectorAll('.emoji-suggestions');
+		emojiSug.forEach(function (sug) {
+			sug.parentElement.style.display = 'none';
+		})
+	});
+	$('body').on('hidden.atwho', function() {
+		var emojiSug = document.querySelectorAll('.emoji-suggestions');
+		emojiSug.forEach(function (sug) {
+			sug.parentElement.style.display = null;
+		})
+	})
 }
