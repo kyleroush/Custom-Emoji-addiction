@@ -33,9 +33,9 @@ function getImage(id) {
     if(!image.startsWith(alias)) {
       var img = document.createElement("img");
       img.src = image;
-      img.alt = id;
+			img.alt = id;
+			img.title = id;
       img.width = 20;
-      // toolTip(img, ':' + id + ':')
       return img.outerHTML;
     }
     id = image.replace(alias, "")
