@@ -68,12 +68,29 @@ if(document.location.host.includes("github")) {
 		var emojiSug = document.querySelectorAll('.emoji-suggestions');
 		emojiSug.forEach(function (sug) {
 			sug.parentElement.style.display = 'none';
-		})
+		});
+    var githubAutoComplete = document.querySelector('.js-navigation-item.navigation-focus');
+    if (githubAutoComplete != null) {
+      githubAutoComplete.className = "js-navigation-item";
+      githubAutoComplete.attributes['aria-selected'].value = false;
+    }
 	});
 	$('body').on('hidden.atwho', function() {
 		var emojiSug = document.querySelectorAll('.emoji-suggestions');
 		emojiSug.forEach(function (sug) {
 			sug.parentElement.style.display = null;
-		})
-	})
+		});
+	});
+	$('body').on('inserted.atwho', function() {
+		var emojiSug = document.querySelectorAll('.emoji-suggestions');
+		emojiSug.forEach(function (sug) {
+			sug.parentElement.hidden = true;
+		});
+
+    var githubAutoComplete = document.querySelector('.js-navigation-item.navigation-focus');
+    if (githubAutoComplete != null) {
+      githubAutoComplete.className = "js-navigation-item";
+      githubAutoComplete.attributes['aria-selected'].value = false;
+    }
+	});
 }
