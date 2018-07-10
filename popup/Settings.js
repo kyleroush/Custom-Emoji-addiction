@@ -41,7 +41,7 @@ function save() {
 /* save the emojis */
 
 function load() {
-  $.ajax({url: jsonUrl.value, success: function(result){
+  $.ajax({url: jsonUrl.value, success: function(result) {
       var map = JSON.parse(result);
       chrome.storage.local.set({emojis: map}, function () {
         alert("loaded")

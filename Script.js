@@ -14,9 +14,13 @@ function oninput() {
   this.value.split(' ').forEach(function (word) {
   	var matcher = word.match(regex);
   	if(matcher != null) {
-      var image = getImage(matcher[1]);
-      if(image != null) {
-    		text = text.replace(matcher[0], image);
+      if (!githubKeys.includes(matcher[1])) {
+
+        var image = getImage(matcher[1]);
+        if(image != null) {
+
+          text = text.replace(matcher[0], image);
+        }
       }
   	}
 
