@@ -1,11 +1,9 @@
 function oninput() {
 
-
-
   var emoji_config = {
     at: ":",
-    data: autocompleteemojis,
-    displayTpl: "<li>${img} ${name} </li>",
+    data: autocompleteemojis.concat(githubAutoComplete),
+    displayTpl: "<li>${liImg} ${name} </li>",
     insertTpl: '${img}',
     delay: 400
   }
@@ -44,15 +42,6 @@ function getImage(id) {
 
   return null;
 }
-
-
-function toolTip(element, tip) {
-
-  element.classList.add("tooltipped");
-  element.classList.add("tooltipped-nw");
-  element.setAttribute("aria-label", tip);
-}
-
 
 var map = {};
 
