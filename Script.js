@@ -50,12 +50,14 @@ function getImage(id) {
 var map = {};
 
 var autocompleteemojis = []
-getEmojis();
 
-if (map == null) {
-  map = {};
-}
+
 if(document.location.host.includes("github")) {
+  getEmojis();
+  if (map == null) {
+    map = {};
+  }
+
   $('body').on('input', 'textarea', oninput);
 	$('body').on('shown.atwho', function() {
 		var emojiSug = document.querySelectorAll('.emoji-suggestions');
