@@ -23,9 +23,8 @@
         "jquery.js",
         "caret.js",
         "atwho.js",
-        "chromeStorage.js",
         "GithubData.js",
-        "Script.js"
+        "script.js"
       ],
       "css" : [
         "atwho.css"
