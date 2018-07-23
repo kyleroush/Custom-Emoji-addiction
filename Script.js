@@ -19,7 +19,7 @@ function oninput() {
   $(this).atwho(emoji_config);
 
   var regex = /:([^:]+):/;
-  var text = this.value
+  var text = this.value;
   // for each word
   this.value.split(' ').forEach(function (word) {
     var matcher = word.match(regex);
@@ -37,7 +37,7 @@ function oninput() {
     }
 
   });
-  this.value = text
+  this.value = text;
 }
 
 /**
@@ -45,7 +45,7 @@ function oninput() {
  * If the id is an alias to another id it will search though the map for the root image
  * if the emoji is not found returns null;
  * required id: the id or alias of the emoji
- * required map: the map of emojis 
+ * required map: the map of emojis
  *
  */
 function getImage(map, id) {
@@ -60,7 +60,7 @@ function getImage(map, id) {
       img.width = 25;
       return img.outerHTML;
     }
-    id = image.replace(alias, "")
+    id = image.replace(alias, "");
     image = map[id];
   }
 
@@ -71,7 +71,7 @@ function getImage(map, id) {
 var map = {};
 
 //The list of formated custom emojis for autocompete
-var autocompleteemojis = []
+var autocompleteemojis = [];
 
 // When the page tha tis loaded is a github page
 if(document.location.host.includes("github")) {
@@ -79,19 +79,19 @@ if(document.location.host.includes("github")) {
   // Either load the github emojis from memory or load them from the api
   chrome.storage.local.get(function (githubData) {
     if (githubData.githubEmojis == undefined) {
-      loadGithubEmoji()
+      loadGithubEmoji();
     } else {
-      buildGithubMap(githubData.githubEmojis)
+      buildGithubMap(githubData.githubEmojis);
     }
   });
 
   //Load the emojis from stoage and initialise map and autocompleteemojis
   chrome.storage.local.get(function(data) {
-    map = data["emojis"]
+    map = data["emojis"];
     autocompleteemojis = Object.keys(map).map(
       function(value, i) {
-        var img = getImage(map, value)
-        return {key: value, name: value, liImg: img, img: img}
+        var img = getImage(map, value);
+        return {key: value, name: value, liImg: img, img: img};
       });
   });
 
@@ -124,6 +124,7 @@ if(document.location.host.includes("github")) {
     var emojiSug = document.querySelectorAll('.emoji-suggestions');
     emojiSug.forEach(function (sug) {
       sug.parentElement.hidden = true;
+      sug.parentElement.parentElement.parentElement.querySelector('textarea').classList.remove('js-navigation-enable');
     });
 
     var githubAutoComplete = document.querySelector('.js-navigation-item.navigation-focus');
