@@ -23,8 +23,6 @@ function initialize() {
   chrome.storage.local.get(function (data) {
     inputBody.innerText = JSON.stringify(data["emojis"]);
   });
-
-
 }
 
 /* save the emojis */
