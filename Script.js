@@ -53,12 +53,12 @@ function getImage(map, id) {
   var image = map[id];
   while(image != null) {
     if(!image.startsWith(alias)) {
-      var img = document.createElement("img");
-      img.src = image;
-      img.alt = id;
-      img.title = id;
-      img.width = 25;
-      return img.outerHTML;
+      // var img = document.createElement("img");
+      // img.src = image;
+      // img.alt = id;
+      // img.title = id;
+      // img.width = 25;
+      return `<img src="${image}" alt="${id}" title="${id}" width="25">`
     }
     id = image.replace(alias, "");
     image = map[id];
