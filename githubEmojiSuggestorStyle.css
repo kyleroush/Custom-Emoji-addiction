@@ -1,0 +1,4 @@
+/* hide the github emoji sugestions when ever it is added */
+.emoji-suggestions {
+    display: none;
+}

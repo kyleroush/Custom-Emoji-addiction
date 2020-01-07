@@ -7,37 +7,35 @@
  *          (This is done here incase they are copy and paste the text over it should
  *           still be swapped out for the emoji element)
  */
-function oninput() {
+function oninput(atWhoData, mappedData, element) {
 
   var emoji_config = {
     at: ":",
-    data: autocompleteemojis.concat(githubAutoComplete),
-    displayTpl: "<li>${liImg} ${name} </li>",
+    data: atWhoData,
+    displayTpl: "<li>${img} ${name}</li>",
     insertTpl: '${img}',
     delay: 400
   }
-  $(this).atwho(emoji_config);
+  $(element).atwho(emoji_config);
 
   var regex = /:([^:]+):/;
-  var text = this.value;
+  var text = element.value;
   // for each word
-  this.value.split(' ').forEach(function (word) {
+  text.split(' ').forEach(function (word) {
     var matcher = word.match(regex);
     // if contains the emoji regex
     if (matcher != null) {
-      // and the word it matches is not a github emoji
-      if (!githubKeys.includes(matcher[1])) {
-        // look to see if the emoji is valid and replace it in the text
-        var image = getImage(map, matcher[1]);
-        if(image != null) {
+      // look to see if the emoji is valid and replace it in the text
+      var image = lookUpImage(mappedData, matcher[1]);
+      if(image != null) {
 
-          text = text.replace(matcher[0], image);
-        }
+        text = text.replace(matcher[0], image);
+        
       }
     }
 
   });
-  this.value = text;
+  element.value = text;
 }
 
 /**
@@ -48,17 +46,19 @@ function oninput() {
  * required map: the map of emojis
  *
  */
-function getImage(map, id) {
+function getImgTag(map, id) {
+  const img = lookUpImage(map, id);
+  if(img === null) return null
+  return `<img src="${img}" alt="${id}" title="${id}" width="25">`
+}
+
+// look up the img from the map with consideration for alias
+function lookUpImage(map, id) {
   var alias = "alias:";
   var image = map[id];
   while(image != null) {
     if(!image.startsWith(alias)) {
-      // var img = document.createElement("img");
-      // img.src = image;
-      // img.alt = id;
-      // img.title = id;
-      // img.width = 25;
-      return `<img src="${image}" alt="${id}" title="${id}" width="25">`
+      return image
     }
     id = image.replace(alias, "");
     image = map[id];
@@ -68,69 +68,48 @@ function getImage(map, id) {
 }
 
 // The map of custom emojis from storage
-var map = {};
+var emojiLookUpMap = {};
+var unicodeEmojiLookUpMap = {};
 
 //The list of formated custom emojis for autocompete
+var autocompleteUniodeEmojis = [];
 var autocompleteemojis = [];
 
 // When the page tha tis loaded is a github page
 if(document.location.host.includes("github")) {
 
-  // Either load the github emojis from memory or load them from the api
-  chrome.storage.local.get(function (githubData) {
-    if (githubData.githubEmojis == undefined) {
-      loadGithubEmoji();
-    } else {
-      buildGithubMap(githubData.githubEmojis);
-    }
-  });
-
   //Load the emojis from stoage and initialise map and autocompleteemojis
   chrome.storage.local.get(function(data) {
-    map = data["emojis"];
-    autocompleteemojis = Object.keys(map).map(
-      function(value, i) {
-        var img = getImage(map, value);
-        return {key: value, name: value, liImg: img, img: img};
-      });
+
+    // process unicode emojis
+    autocompleteUniodeEmojis = Object.keys(unicode_emojis).map(function(name) {
+      emojiLookUpMap[name] = unicode_emojis[name]['char'];
+      unicodeEmojiLookUpMap[name] = unicode_emojis[name]['char'];
+      return {key: name, name: name, img: unicode_emojis[name]['char']};
+    });
+
+    // process the custom emojis
+    var map = data["emojis"];
+    autocompleteemojis = autocompleteUniodeEmojis.concat(Object.keys(map).map(function(name, i) {
+
+        var img = getImgTag(map, name);
+        emojiLookUpMap[name] = img;
+        return {key: name, name: name, img: img};
+    }));
   });
 
   // On input action on any textArea in the body of the page call input
-  $('body').on('input', 'textarea', oninput);
-
-  //When the auto complete is shone hide the github autocomplete
-  $('body').on('shown.atwho', function() {
-    var emojiSug = document.querySelectorAll('.emoji-suggestions');
-    emojiSug.forEach(function (sug) {
-      sug.parentElement.style.display = 'none';
-    });
-    var githubAutoComplete = document.querySelector('.js-navigation-item.navigation-focus');
-    if (githubAutoComplete != null) {
-      githubAutoComplete.className = "js-navigation-item";
-      githubAutoComplete.attributes['aria-selected'].value = false;
-    }
-  });
-
-  // when atwho hidden (the user hit esc or there is no valid text) enable githubs autocomplete
-  $('body').on('hidden.atwho', function() {
-    var emojiSug = document.querySelectorAll('.emoji-suggestions');
-    emojiSug.forEach(function (sug) {
-      sug.parentElement.style.display = null;
-    });
-  });
+  $('body').on('input', 'textarea', function() { oninput(autocompleteemojis, emojiLookUpMap, this) });
+  $('body').on('input', 'input',    function() { oninput(autocompleteUniodeEmojis, unicodeEmojiLookUpMap, this) });
 
   // when atwho inserts a text
   $('body').on('inserted.atwho', function() {
-    var emojiSug = document.querySelectorAll('.emoji-suggestions');
-    emojiSug.forEach(function (sug) {
-      sug.parentElement.hidden = true;
-      sug.parentElement.parentElement.parentElement.querySelector('textarea').classList.remove('js-navigation-enable');
-    });
+    var emojiSug = document.querySelector('.emoji-suggestions');
 
-    var githubAutoComplete = document.querySelector('.js-navigation-item.navigation-focus');
-    if (githubAutoComplete != null) {
-      githubAutoComplete.className = "js-navigation-item";
-      githubAutoComplete.attributes['aria-selected'].value = false;
+    // Make sure the github autocomplete is unselecteds
+    var selected = document.querySelector('.emoji-suggestions > [aria-selected=true]');
+    if(!!selected) {
+      selected.attributes['aria-selected'].value = false;
     }
   });
 }
